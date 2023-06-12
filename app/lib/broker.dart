@@ -1,34 +1,45 @@
-/*
- * Package : mqtt_client
- * Author : S. Hamblett <steve.hamblett@linux.com>
- * Date   : 10/07/2021
- * Copyright :  S.Hamblett
- *
- */
 
 import 'dart:async';
 import 'dart:io';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
-/// An example of connecting to the AWS IoT Core MQTT broker and publishing to a devices topic.
-/// This example uses MQTT on port 8883 using certificites
-/// More instructions can be found at https://docs.aws.amazon.com/iot/latest/developerguide/mqtt.html and
-/// https://docs.aws.amazon.com/iot/latest/developerguide/protocols.html, please read this
-/// before setting up and running this example.
-Future<int> main() async {
-  const url = 'iot.eclipse.org';  // Broker
-  const port = 1883;
-  const clientId = 'RedmiCassio';
-  const topic = 'RainIOT_UNISC'; // Receba informações deste tópico
 
+Future<int> main() async {
+  // Your AWS IoT Core endpoint url
+  const url = 'atx6yri73wi2d-ats.iot.us-east-2.amazonaws.com';
+  // AWS IoT MQTT default port
+  const port = 8883;
+  // The client id unique to your device
+  const clientId = 'bertold233420109asheley';
 
   // Create the client
   final client = MqttServerClient.withPort(url, clientId, port);
 
+  // Set Keep-Alive
+  client.keepAlivePeriod = 20;
+  // Set the protocol to V3.1.1 for AWS IoT Core, if you fail to do this you will not receive a connect ack with the response code
+  client.setProtocolV311();
+  // logging if you wish
+  client.logging(on: false);
+// Set secure
+  client.secure = true;
+
+  final context = SecurityContext.defaultContext;
+  context.setClientAuthorities('/home/cassio/Downloads/AmazonRootCA1.pem');
+  context.useCertificateChain('/home/cassio/Downloads/5a592f13511f8e1523eedce3cd6a3a4bfede8370e993d339566beab83011f1e2-certificate.pem(1).crt');
+  context.usePrivateKey('/home/cassio/Downloads/5a592f13511f8e1523eedce3cd6a3a4bfede8370e993d339566beab83011f1e2-private.pem.key');
+  client.securityContext = context;
+
+  // Setup the connection Message
+  final connMess = MqttConnectMessage()
+      .withClientIdentifier(clientId)
+      .startClean();
+  client.connectionMessage = connMess;
+
   // Connect the client
   try {
-    print('MQTT client se conectando na url: $url, com id: $clientId');
+    print('MQTT client connecting to AWS IoT using certificates....');
     await client.connect();
   } on Exception catch (e) {
     print('MQTT client exception - $e');
@@ -38,6 +49,14 @@ Future<int> main() async {
 
   if (client.connectionStatus!.state == MqttConnectionState.connected) {
     print('MQTT client connected to AWS IoT');
+
+    // Publish to a topic of your choice after a slight delay, AWS seems to need this
+    await MqttUtilities.asyncSleep(1);
+    const topic = '/test/topic';
+    final builder = MqttClientPayloadBuilder();
+    builder.addString('Hello World');
+    // Important: AWS IoT Core can only handle QOS of 0 or 1. QOS 2 (exactlyOnce) will fail!
+    client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
 
     // Subscribe to the same topic
     client.subscribe(topic, MqttQos.atLeastOnce);
