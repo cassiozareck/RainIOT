@@ -27,8 +27,8 @@ Future<int> main() async {
 
   final context = SecurityContext.defaultContext;
   context.setClientAuthorities('/home/cassio/Downloads/AmazonRootCA1.pem');
-  context.useCertificateChain('/home/cassio/Downloads/5a592f13511f8e1523eedce3cd6a3a4bfede8370e993d339566beab83011f1e2-certificate.pem(1).crt');
-  context.usePrivateKey('/home/cassio/Downloads/5a592f13511f8e1523eedce3cd6a3a4bfede8370e993d339566beab83011f1e2-private.pem.key');
+  context.useCertificateChain('/home/cassio/Downloads/.....crt');
+  context.usePrivateKey('/home/cassio/Downloads/....pem.key');
   client.securityContext = context;
 
   // Setup the connection Message
