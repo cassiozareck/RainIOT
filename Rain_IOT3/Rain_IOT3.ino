@@ -15,11 +15,9 @@
 #define SMTP_HOST "smtp.aol.com" //endereço do servidor SMTP
 #define SMTP_PORT esp_mail_smtp_port_587 //porta
 
-//Credenciais de Login
-#define AUTHOR_EMAIL "email"
-#define AUTHOR_PASSWORD "senha"
-
-
+//Credenciais de Login AOL (Eu ja criei uma conta na AOL, colocamos as credenciais quando formos testar)
+#define AUTHOR_EMAIL "email" //Este é um arquivo publico, não colocar credenciais
+#define AUTHOR_PASSWORD "senha" //Este é um arquivo publico, não colocar credenciais
 
 #define pinSensorA A0 //Definição do pino analogico do sensor de chuva
 #define pinSensorD 14 //Definição do pino digital do sensor de chuva 
@@ -31,7 +29,7 @@ WiFiClient wifiClient;
  
 
 //Declaração das Funções
-void mantemConexoes();  //Garante conexao WiFi
+void mantemConexoes();  //Mantem conexao WiFi
 void conectaWiFi();     //Faz conexão com WiFi
 void sensorChuva();      //Recebe os dados do sensor de chuva e se comunica via MQTT
 
