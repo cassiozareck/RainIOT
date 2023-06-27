@@ -133,7 +133,6 @@ void conetaBroker() //faz conexão com o Broker, e reconecta caso caia a conexã
     if (client.connect("ESP32Client", mqtt_username, mqtt_password)) 
     {
       Serial.println("Conectado!");
-      client.publish(TOPIC_PUBLISH2, "1");
     } 
     else 
     {
@@ -143,6 +142,7 @@ void conetaBroker() //faz conexão com o Broker, e reconecta caso caia a conexã
       delay(5000);
     }
   }
+  client.publish(TOPIC_PUBLISH2, "1"); //Envia 1 no tópico iot_connection_state a fim de avisar o app que o dispositivo está online
 }
 
 void sensorChuva()
