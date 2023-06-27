@@ -75,14 +75,17 @@ class _MQTTScreenState extends State<MQTTScreen> {
   void subscribeToTopic() {
     const topic = 'rainiot';
     client!.subscribe(topic, MqttQos.exactlyOnce);
+
     client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       print("Nova mensagem");
+
       // Quando receber mensagem:
       final recMess = c[0].payload as MqttPublishMessage;
       final pt =
       MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
       if (pt == '1') {
-        showNotification('Está chovendo, olha a roupa no varal', '');
+        showNotification('Está chovendo, olhe a roupa no varal', '');
       } else {
         showNotification('Não está chovendo', '');
       }
