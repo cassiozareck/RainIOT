@@ -55,7 +55,8 @@ class _MQTTScreenState extends State<MQTTScreen> {
   // Conecta no broker MQTT de forma assíncrona para ouvir novas mensagens sem
   // trancar a thread principal
   Future<void> connectMQTT() async {
-    const url = '44cd3984802a4140a875c758be49bbac.s2.eu.hivemq.cloud';
+    // Removed url because of security riscs
+    const url = '';
     const port = 8883;
 
     // Gera um número único e aleatório para o Client ID
@@ -66,8 +67,8 @@ class _MQTTScreenState extends State<MQTTScreen> {
     client!.keepAlivePeriod = 20;
     client!.secure = true;
     client!.securityContext = SecurityContext.defaultContext;
-
-    await client!.connect('cassiopc123123', "C123c321");
+  
+    await client!.connect();
     subscribeToTopic();
   }
 
